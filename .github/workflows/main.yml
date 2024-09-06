@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QRコード連携</title>
+</head>
+<body>
+  <script>
+    // QRコードからクエリパラメータを取得
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('ID');
+    const imageUrl = urlParams.get('画像URL');
+
+    // 画像を表示
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    document.body.appendChild(img);
+
+    // Formbridge API を使用してデータ送信
+    const formData = {
+      'ID': id,
+      'DateandTime': new Date().toISOString(),
+    };
+
+    // Formbridge アプリの URL と API トークンを置き換えてください
+    const formbridgeAppUrl = 'https://ce2772f8.form.kintoneapp.com/public/71dce7b9fd288ac20bd5befc109a395c9ce715caea3aac1a2ace6ee531ed0469';
+    const apiToken = 'YOUR_FORMBRIDGE_API_TOKEN';
+
+    fetch(`${formbridgeAppUrl}/api/v1/records`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`,
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Form submitted successfully');
+      })
+      .catch(error => {
+        console.error('Error submitting form:', error);
+      });
+  </script>
+</body>
+</html>
